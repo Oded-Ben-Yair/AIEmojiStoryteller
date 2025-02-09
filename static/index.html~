@@ -1,0 +1,27 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Powered Emoji Storyteller</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>AI-Powered Emoji Storyteller</h1>
+    <div id="input-section">
+        <h2>Enter a Story Prompt</h2>
+        <textarea id="textPrompt" placeholder="Type your story prompt here..." rows="4" cols="50"></textarea>
+        <br>
+        <button onclick="translatePrompt()">Translate to Emojis</button>
+        <button onclick="generateStory()">Generate Story</button>
+    </div>
+    <div id="output-section">
+        <h2>Result</h2>
+        <p><strong>Emojis:</strong> <span id="emojiOutput"></span></p>
+        <p><strong>Story:</strong> <span id="storyOutput"></span></p>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+

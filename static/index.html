@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI-Powered Emoji Storyteller</title>
+  <!-- Bootstrap CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container py-5">
+    <h1 class="mb-4 text-center">AI-Powered Emoji Storyteller</h1>
+
+    <!-- Tab Navigation for Different Modes -->
+    <ul class="nav nav-tabs mb-4" id="modeTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="text-mode-tab" data-bs-toggle="tab" data-bs-target="#text-mode" type="button" role="tab" aria-controls="text-mode" aria-selected="true">
+          Text-to-Story
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="emoji-mode-tab" data-bs-toggle="tab" data-bs-target="#emoji-mode" type="button" role="tab" aria-controls="emoji-mode" aria-selected="false">
+          Emoji-to-Story
+        </button>
+      </li>
+    </ul>
+
+    <div class="tab-content" id="modeTabContent">
+      <!-- Text-to-Story Mode -->
+      <div class="tab-pane fade show active" id="text-mode" role="tabpanel" aria-labelledby="text-mode-tab">
+        <div class="card mb-4">
+          <div class="card-header">Enter Your Story Prompt</div>
+          <div class="card-body">
+            <textarea id="textPrompt" class="form-control mb-3" rows="3" placeholder="e.g., Once upon a time, there was a little red riding hood..."></textarea>
+            <button id="translateBtn" class="btn btn-primary mb-3" onclick="translatePrompt()">Translate to Emojis</button>
+            <div id="emojiDisplay" class="mb-3"></div>
+            <button id="generateBtn" class="btn btn-success" onclick="generateStory()">Generate Story</button>
+          </div>
+        </div>
+      </div>
+      <!-- Emoji-to-Story Mode -->
+      <div class="tab-pane fade" id="emoji-mode" role="tabpanel" aria-labelledby="emoji-mode-tab">
+        <div class="card mb-4">
+          <div class="card-header">Enter Your Emoji Sequence</div>
+          <div class="card-body">
+            <textarea id="emojiInput" class="form-control mb-3" rows="2" placeholder="e.g., 🎀👧🐺"></textarea>
+            <button id="reverseBtn" class="btn btn-warning" onclick="generateStoryFromEmojis()">Generate Story from Emojis</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Story Display Section -->
+    <div class="card">
+      <div class="card-header">Generated Story</div>
+      <div class="card-body">
+        <p id="storyOutput" class="lead"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS Bundle CDN (includes Popper) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
+

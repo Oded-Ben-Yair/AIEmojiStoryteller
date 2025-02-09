@@ -1,0 +1,105 @@
+# app.py
+# FastAPI application for AI-Powered Emoji Storyteller
+
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+import os
+from openai import OpenAI
+
+# Load your OpenAI API key from an environment variable for security
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+if not OPENAI_API_KEY:
+    raise Exception("Please set your OPENAI_API_KEY environment variable")
+
+# Instantiate the OpenAI client with your API key
+client = OpenAI(api_key=OPENAI_API_KEY)
+
+# Initialize FastAPI
+app = FastAPI(title="AI-Powered Emoji Storyteller", version="1.0")
+
+# Add CORS middleware to allow requests from any origin (for development)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # In production, replace "*" with your actual frontend domain(s)
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Optionally, mount static files if serving the frontend from FastAPI.
+# Uncomment the following lines if needed:
+#
+# from fastapi.staticfiles import StaticFiles
+# app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# Pydantic models for request bodies
+class TextPrompt(BaseModel):
+    prompt: str
+
+class EmojiSequence(BaseModel):
+    emojis: str
+
+def call_openai(prompt: str) -> str:
+    """
+    Call the OpenAI API using the ChatCompletion endpoint and return the text result.
+    Uses GPT-4 for more advanced responses.
+    """
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4",
+            messages=[
+                {
+                    "role": "system",
+                    "content": "You are a creative assistant that can translate text into emojis and generate short, engaging stories."
+                },
+                {"role": "user", "content": prompt},
+            ],
+            max_tokens=300,
+            temperature=0.7
+        )
+        # Extract and return the response message content
+        return response.choices[0].message.content.strip()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"OpenAI API error: {e}")
+
+@app.post("/translate")
+async def translate_prompt(text: TextPrompt):
+    """
+    Convert a text prompt to an emoji sequence.
+    The prompt instructs the LLM to return only emojis.
+    """
+    llm_prompt = (
+        f"Convert the following text into a sequence of emojis that represent the key elements of the story: "
+        f"'{text.prompt}'.\nOnly output the emojis, no additional text."
+    )
+    emojis = call_openai(llm_prompt)
+    return {"emojis": emojis}
+
+@app.post("/generate")
+async def generate_story(text: EmojiSequence):
+    """
+    Generate a short story that explains each emoji.
+    """
+    llm_prompt = (
+        f"Write a short, coherent story that incorporates and explains the following sequence of emojis: "
+        f"'{text.emojis}'. Ensure that the story clearly maps each emoji to a part of the narrative."
+    )
+    story = call_openai(llm_prompt)
+    return {"story": story}
+
+@app.post("/reverse")
+async def reverse_mode(text: EmojiSequence):
+    """
+    Generate a story based solely on a provided sequence of emojis.
+    """
+    llm_prompt = (
+        f"Generate a creative and coherent story based on this sequence of emojis: '{text.emojis}'."
+    )
+    story = call_openai(llm_prompt)
+    return {"story": story}
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("app:app", host="127.0.0.1", port=8000, reload=True)
+
