@@ -1,5 +1,5 @@
 /* script.js */
-const BASE_URL = "http://127.0.0.1:8000";
+const BASE_URL = "https://emoji-storyteller.onrender.com";
 
 // A small list of random prompts (various languages)
 const RANDOM_PROMPTS = [
